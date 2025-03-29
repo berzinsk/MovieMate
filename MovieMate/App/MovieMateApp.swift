@@ -12,7 +12,7 @@ struct MovieMateApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                HomeView(viewModel: HomeViewModel())
+                HomeView(viewModel: HomeViewModel(service: MovieClient()))
             }
         }
     }

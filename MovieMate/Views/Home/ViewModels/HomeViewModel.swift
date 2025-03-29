@@ -8,9 +8,31 @@
 import Combine
 
 class HomeViewModel: ObservableObject {
-    @Published var movies: [Movie] = []
+    enum State {
+        case loading
+        case loaded
+        case error
+    }
 
-    func start() {
-        movies = Movie.previews
+    @Published var movies: [Movie] = []
+    @Published var state: State = .loading
+
+    private let service: MovieService
+
+    init(service: MovieService) {
+        self.service = service
+    }
+
+    @MainActor
+    func start() async {
+        state = .loading
+
+        do {
+            movies = try await service.getMovies()
+            state = .loaded
+        } catch {
+            print("Unable to get movies")
+            state = .error
+        }
     }
 }

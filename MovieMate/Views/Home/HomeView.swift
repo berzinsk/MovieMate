@@ -11,12 +11,22 @@ struct HomeView: View {
     @ObservedObject var viewModel: HomeViewModel
 
     var body: some View {
-        List(viewModel.movies) { movie in
-            MovieRow(for: movie)
+        Group {
+            switch viewModel.state {
+            case .loading:
+                ProgressView()
+                    .scaleEffect(2.0)
+            case .loaded:
+                List(viewModel.movies) { movie in
+                    MovieRow(for: movie)
+                }
+            case .error:
+                Text("Error loading countries")
+            }
         }
         .navigationTitle("Movies")
         .task {
-            viewModel.start()
+            await viewModel.start()
         }
     }
 
@@ -29,5 +39,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(viewModel: HomeViewModel())
+    HomeView(viewModel: HomeViewModel(service: MovieMockClient()))
 }
