@@ -11,7 +11,9 @@ import SwiftUI
 struct MovieMateApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack {
+                HomeView(viewModel: HomeViewModel())
+            }
         }
     }
 }
