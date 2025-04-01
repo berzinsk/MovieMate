@@ -1,5 +1,5 @@
 //
-//  HomeView.swift
+//  MovieView.swift
 //  MovieMate
 //
 //  Created by Karlis Berzins on 29/03/2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct HomeView: View {
+struct MovieView: View {
     @ObservedObject var viewModel: HomeViewModel
 
     var body: some View {
@@ -18,7 +18,11 @@ struct HomeView: View {
                     .scaleEffect(2.0)
             case .loaded:
                 List(viewModel.movies) { movie in
-                    MovieRow(for: movie)
+                    MovieRowView(
+                        movie: movie,
+                        posterURL: viewModel.posterURL(for: movie),
+                        imageCache: viewModel.imageCache
+                    )
                 }
                 .refreshable {
                     await viewModel.refresh()
@@ -40,13 +44,6 @@ struct HomeView: View {
             await viewModel.start()
         }
     }
-
-    @ViewBuilder
-    func MovieRow(for movie: Movie) -> some View {
-        HStack {
-            Text(movie.title)
-        }
-    }
 }
 
 #Preview {
@@ -57,6 +54,7 @@ struct HomeView: View {
         remoteService: remoteService,
         localService: localService
     )
+    let imageCache = ImageCache()
 
-    return HomeView(viewModel: HomeViewModel(repository: repository))
+    MovieView(viewModel: HomeViewModel(repository: repository, imageCache: imageCache))
 }

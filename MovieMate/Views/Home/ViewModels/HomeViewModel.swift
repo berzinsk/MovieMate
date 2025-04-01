@@ -19,9 +19,11 @@ class HomeViewModel: ObservableObject {
     @Published var isRefreshing: Bool = false
 
     private let repository: MovieRepositoryProtocol
+    private(set) var imageCache: ImageCaching
 
-    init(repository: MovieRepositoryProtocol) {
+    init(repository: MovieRepositoryProtocol, imageCache: ImageCaching) {
         self.repository = repository
+        self.imageCache = imageCache
     }
 
     @MainActor
@@ -50,5 +52,9 @@ class HomeViewModel: ObservableObject {
         }
 
         isRefreshing = false
+    }
+
+    func posterURL(for movie: Movie) -> String {
+        APIConstants.posterBaseURL + movie.posterPath
     }
 }
