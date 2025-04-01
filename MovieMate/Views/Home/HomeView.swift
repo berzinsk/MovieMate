@@ -20,8 +20,19 @@ struct HomeView: View {
                 List(viewModel.movies) { movie in
                     MovieRow(for: movie)
                 }
+                .refreshable {
+                    await viewModel.refresh()
+                }
             case .error:
-                Text("Error loading countries")
+                VStack {
+                    Text("Error loading movies")
+                    Button("Try Again") {
+                        Task {
+                            await viewModel.start()
+                        }
+                    }
+                    .buttonStyle(.bordered)
+                }
             }
         }
         .navigationTitle("Movies")
@@ -39,5 +50,13 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(viewModel: HomeViewModel(service: MovieMockClient()))
+    let coreDataStack = CoreDataStack()
+    let localService = LocalMovieLoader(coreDataStack: coreDataStack)
+    let remoteService = MovieMockClient()
+    let repository = MovieRepository(
+        remoteService: remoteService,
+        localService: localService
+    )
+
+    return HomeView(viewModel: HomeViewModel(repository: repository))
 }

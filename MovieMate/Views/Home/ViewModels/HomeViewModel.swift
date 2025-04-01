@@ -16,11 +16,12 @@ class HomeViewModel: ObservableObject {
 
     @Published var movies: [Movie] = []
     @Published var state: State = .loading
+    @Published var isRefreshing: Bool = false
 
-    private let service: MovieService
+    private let repository: MovieRepositoryProtocol
 
-    init(service: MovieService) {
-        self.service = service
+    init(repository: MovieRepositoryProtocol) {
+        self.repository = repository
     }
 
     @MainActor
@@ -28,11 +29,26 @@ class HomeViewModel: ObservableObject {
         state = .loading
 
         do {
-            movies = try await service.getMovies()
+            movies = try await repository.getMovies()
             state = .loaded
         } catch {
-            print("Unable to get movies")
+            print("Unable to get movies: \(error)")
             state = .error
         }
+    }
+
+    @MainActor
+    func refresh() async {
+        guard !isRefreshing else { return }
+
+        isRefreshing = true
+
+        do {
+            movies = try await repository.refreshMovies()
+        } catch {
+            print("Unable to refresh movies: \(error)")
+        }
+
+        isRefreshing = false
     }
 }
