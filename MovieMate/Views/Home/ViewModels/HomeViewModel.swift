@@ -17,6 +17,7 @@ class HomeViewModel: ObservableObject {
     @Published var movies: [Movie] = []
     @Published var state: State = .loading
     @Published var isRefreshing: Bool = false
+    @Published var started: Bool = false
 
     private let repository: MovieRepositoryProtocol
     private(set) var imageCache: ImageCaching
@@ -28,7 +29,10 @@ class HomeViewModel: ObservableObject {
 
     @MainActor
     func start() async {
+        guard !started else { return }
+
         state = .loading
+        started = true
 
         do {
             movies = try await repository.getMovies()
@@ -55,6 +59,6 @@ class HomeViewModel: ObservableObject {
     }
 
     func posterURL(for movie: Movie) -> String {
-        APIConstants.posterBaseURL + movie.posterPath
+        APIConstants.posterBaseURL + (movie.posterPath ?? "")
     }
 }

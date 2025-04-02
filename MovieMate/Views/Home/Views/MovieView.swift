@@ -17,13 +17,14 @@ struct MovieView: View {
                 ProgressView()
                     .scaleEffect(2.0)
             case .loaded:
-                List(viewModel.movies) { movie in
-                    MovieRowView(
-                        movie: movie,
-                        posterURL: viewModel.posterURL(for: movie),
-                        imageCache: viewModel.imageCache
-                    )
+                List(viewModel.movies, id: \.id) { movie in
+                    NavigationLink {
+                        MovieDetailView(viewModel: MovieDetailViewModel(movie: movie, imageCache: viewModel.imageCache))
+                    } label: {
+                        MovieRowView(movie: movie, posterURL: viewModel.posterURL(for: movie), imageCache: viewModel.imageCache)
+                    }
                 }
+                .listStyle(.plain)
                 .refreshable {
                     await viewModel.refresh()
                 }
@@ -32,7 +33,7 @@ struct MovieView: View {
                     Text("Error loading movies")
                     Button("Try Again") {
                         Task {
-                            await viewModel.start()
+                            await viewModel.refresh()
                         }
                     }
                     .buttonStyle(.bordered)

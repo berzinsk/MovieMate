@@ -22,8 +22,13 @@ struct CachedImageView: View {
                     .aspectRatio(contentMode: .fill)
             } else if isLoading {
                 ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.gray.opacity(0.2))
             } else if error != nil {
                 Image(systemName: "photo")
+                    .font(.largeTitle)
+                    .foregroundColor(.gray)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.gray.opacity(0.2))
             }
         }

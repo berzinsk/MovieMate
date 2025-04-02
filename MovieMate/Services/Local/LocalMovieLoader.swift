@@ -27,14 +27,19 @@ class LocalMovieLoader: LocalMovieService {
 
         let entities = try context.fetch(request)
         return entities.map { entity in
-            Movie(
+            let movie = Movie(
                 id: Int(entity.id),
                 title: entity.title ?? "",
                 overview: entity.overview ?? "",
-                popularity: entity.popularity,
+                posterPath: entity.posterPath ?? "",
+                backdropPath: entity.backdropPath,
                 releaseDate: entity.releaseDate ?? "",
-                posterPath: entity.posterPath ?? ""
+                voteAverage: entity.voteAverage,
+                voteCount: Int(entity.voteCount),
+                popularity: entity.popularity,
+                originalLanguage: entity.originalLanguage ?? "en"
             )
+            return movie
         }
     }
 
@@ -53,6 +58,10 @@ class LocalMovieLoader: LocalMovieService {
             entity.popularity = movie.popularity
             entity.releaseDate = movie.releaseDate
             entity.posterPath = movie.posterPath
+            entity.backdropPath = movie.backdropPath
+            entity.voteAverage = movie.voteAverage
+            entity.voteCount = Int64(movie.voteCount)
+            entity.originalLanguage = movie.originalLanguage
             entity.lastFetchDate = currentDate
         }
 
