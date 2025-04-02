@@ -13,50 +13,64 @@ struct MovieDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                if let backdropURL = viewModel.backdropURL {
-                    CachedImageView(url: backdropURL, cache: viewModel.imageCache)
-                        .frame(height: 200)
-                        .clipped()
-                }
+                Poster()
                 VStack(alignment: .leading, spacing: 20) {
                     Text(viewModel.movie.title)
                         .font(.title)
                         .fontWeight(.bold)
-                    HStack(spacing: 16) {
-                        VStack(alignment: .leading) {
-                            Label(viewModel.movie.formattedVoteAverage, systemImage: "star.fill")
-                                .foregroundColor(.yellow)
-                            Text("\(viewModel.movie.formattedVoteCount) votes")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        VStack(alignment: .leading) {
-                            Label(viewModel.movie.formattedPopularity, systemImage: "chart.line.uptrend.xyaxis")
-                            Text("Popularity")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        VStack(alignment: .leading) {
-                            Label(viewModel.movie.languageName, systemImage: "globe")
-                            Text("Language")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    .font(.subheadline)
+                    RatingRow()
                     Text("Overview")
                         .font(.headline)
                     Text(viewModel.movie.overview)
                         .font(.body)
-                    Label(viewModel.movie.formattedReleaseDate, systemImage: "calendar")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+                    ReleaseDate()
                 }
                 .padding()
             }
         }
         .navigationTitle(viewModel.navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    func Poster() -> some View {
+        if let backdropURL = viewModel.backdropURL {
+            CachedImageView(url: backdropURL, cache: viewModel.imageCache)
+                .frame(height: 200)
+                .clipped()
+        }
+    }
+
+    @ViewBuilder
+    func RatingRow() -> some View {
+        HStack(spacing: 16) {
+            VStack(alignment: .leading) {
+                Label(viewModel.movie.formattedVoteAverage, systemImage: "star.fill")
+                    .foregroundColor(.yellow)
+                Text("\(viewModel.movie.formattedVoteCount) votes")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            VStack(alignment: .leading) {
+                Label(viewModel.movie.formattedPopularity, systemImage: "chart.line.uptrend.xyaxis")
+                Text("Popularity")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            VStack(alignment: .leading) {
+                Label(viewModel.movie.languageName, systemImage: "globe")
+                Text("Language")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+        }
+    }
+
+    @ViewBuilder
+    func ReleaseDate() -> some View {
+        Label(viewModel.movie.formattedReleaseDate, systemImage: "calendar")
+            .font(.subheadline)
+            .foregroundColor(.secondary)
     }
 }
 
