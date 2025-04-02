@@ -1,5 +1,5 @@
 //
-//  HomeViewModel.swift
+//  MovieViewModel.swift
 //  MovieMate
 //
 //  Created by Karlis Berzins on 29/03/2025.
@@ -7,7 +7,7 @@
 
 import Combine
 
-class HomeViewModel: ObservableObject {
+class MovieViewModel: ObservableObject {
     enum State {
         case loading
         case loaded

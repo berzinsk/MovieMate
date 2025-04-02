@@ -30,7 +30,7 @@ struct MovieMateApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                MovieView(viewModel: HomeViewModel(repository: repository, imageCache: imageCache))
+                MovieView(viewModel: MovieViewModel(repository: repository, imageCache: imageCache))
             }
             .onDisappear {
                 coreDataStack.saveContext()

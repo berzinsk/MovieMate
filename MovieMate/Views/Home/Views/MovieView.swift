@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MovieView: View {
-    @ObservedObject var viewModel: HomeViewModel
+    @ObservedObject var viewModel: MovieViewModel
 
     var body: some View {
         Group {
@@ -57,5 +57,5 @@ struct MovieView: View {
     )
     let imageCache = ImageCache()
 
-    MovieView(viewModel: HomeViewModel(repository: repository, imageCache: imageCache))
+    MovieView(viewModel: MovieViewModel(repository: repository, imageCache: imageCache))
 }
